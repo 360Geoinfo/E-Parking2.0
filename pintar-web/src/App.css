@@ -1,0 +1,39 @@
+/* App.css */
+
+/* Reset default margin and padding for full viewport */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  box-sizing: border-box;
+}
+
+/* App container takes full height and width */
+.App {
+  height: 100vh; /* full viewport height */
+  width: 100vw;  /* full viewport width */
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+/* Main content area grows to fill remaining space */
+.routes-container {
+  flex: 1; /* fill remaining vertical space */
+  overflow-y: auto; /* scroll if content is tall */
+  padding: 20px 40px;
+}
+
+/* Example styles for links inside Navbar if any */
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}

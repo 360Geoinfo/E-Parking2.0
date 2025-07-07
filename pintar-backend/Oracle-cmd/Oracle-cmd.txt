@@ -1,0 +1,191 @@
+node index.js
+npm run start
+
+
+<Picker.Item label="Sila pilih nombor plat" value="" />
+
+navigation.replace('CustomerTabs', { screen: 'Pembayaran' });
+
+
+
+
+
+TRUNCATE TABLE users;
+ALTER TABLE publicUser ADD token VARCHAR2(1000);
+SELECT * FROM publicUser;
+SELECT * FROM VEHICLEDETAIL;
+
+DELETE FROM publicUser;
+
+
+UPDATE PUBLICUSER
+SET PLATLICENSE = 'BAG123'
+WHERE USERNAME = 'adminbibi';
+
+COMMIT;
+
+
+INSERT INTO users (name, email, password, token)
+VALUES ('username_here', 'email@example.com', 'password123', 'dummyToken123');
+
+COMMIT;
+
+
+
+
+INSERT INTO users (name, email, password, token)
+VALUES ('username_here', 'email@example.com', 'password123', 'dummyToken123');
+
+COMMIT;
+SELECT * FROM users;
+
+Oracle Credential used in .env
+- Username = SmartParkingDB
+- Password = geo360SgTilong
+
+install = npm install bcrypt
+
+
+
+CREATE TABLE VehicleDetail (
+  USERID         VARCHAR2(250),
+  VEHICLEID      VARCHAR2(250) PRIMARY KEY,
+  PLATLICENSE   VARCHAR2(250),
+  VEHICLETYPES   VARCHAR2(250),
+  VEHICLEMODEL   VARCHAR2(250),
+  VEHICLECOLOUR  VARCHAR2(250)
+);
+
+
+
+----------------------------------------------------------------------------------
+
+Create Oracle API
+Step 1 ==============================================================================
+mkdir oracle-api
+cd oracle-api
+npm init -y
+npm install express oracledb jsonwebtoken dotenv
+Step 2 ==============================================================================
+oracle-api/
+│
+├── .env                  # stores DB credentials & JWT secret
+├── index.js              # main API file
+Step 3 ==============================================================================
+DB_USER=myapp_user
+DB_PASSWORD=mypassword
+DB_CONNECTION_STRING=localhost/XEPDB1
+JWT_SECRET=mysecretkey
+Step 4 ==============================================================================
+Create index.js
+require('dotenv').config();
+const express = require('express');
+const oracledb = require('oracledb');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Middleware to check Bearer Token
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader?.split(' ')[1];
+  if (!token) return res.sendStatus(401);
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
+// Oracle DB connection pool
+async function init() {
+  try {
+    await oracledb.createPool({
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      connectString: process.env.DB_CONNECTION_STRING,
+    });
+    console.log('Oracle pool created');
+  } catch (err) {
+    console.error('Error creating Oracle pool:', err);
+  }
+}
+
+// Login route for token generation (test/demo purpose)
+app.post('/login', (req, res) => {
+  const { username } = req.body;
+  // In real app: validate user with DB
+  const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  res.json({ token });
+});
+
+// Protected route to get users
+app.get('/users', authenticateToken, async (req, res) => {
+  let conn;
+  try {
+    conn = await OracleDB.getConnection();
+    const result = await conn.execute(`SELECT id, name, email FROM users`);
+    const rows = result.rows.map(([id, name, email]) => ({ id, name, email }));
+    res.json(rows);
+  } catch (err) {
+    console.error('DB error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    if (conn) await conn.close();
+  }
+});
+
+init();
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+Step 5 =============================================================================================================
+node index.js
+================================================================================================================
+
+React Native Example Fetch Call
+
+const token = 'your_jwt_token_here';
+
+fetch('http://your-server-ip:3000/users', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+  },
+})
+  .then(res => res.json())
+  .then(data => {
+    console.log('Users:', data);
+  })
+  .catch(err => {
+    console.error('Error:', err);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

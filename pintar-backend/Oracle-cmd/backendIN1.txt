@@ -1,0 +1,100 @@
+require('dotenv').config();
+const express = require('express');
+const oracledb = require('oracledb');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Oracle DB connection pool initialization
+async function init() {
+  try {
+    await oracledb.createPool({
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      connectString: process.env.DB_CONNECTION_STRING,
+    });
+    console.log('Oracle pool created');
+  } catch (err) {
+    console.error('Error creating Oracle pool:', err);
+  }
+}
+
+// Middleware to check Bearer Token
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader?.split(' ')[1];
+  console.log('Received token:', token);  // Debugging the token
+  
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      console.error('Token verification failed:', err.message);
+      return res.sendStatus(403);
+    }
+    req.user = user;
+    next();
+  });
+};
+
+
+
+// Login route to generate JWT (mocked login for demo)
+app.post('/login', (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ message: 'Username is required' });
+  }
+
+  // Create token
+  const token = jwt.sign(
+    { username },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+
+  res.json({ token });
+});
+
+
+
+// Root route
+app.get('/users', authenticateToken, async (req, res) => {
+  let conn;
+  try {
+    conn = await OracleDB.getConnection();
+    const result = await conn.execute(`SELECT ID, NAME, EMAIL, PASSWORD, TOKEN FROM USERS`);
+    console.log("Raw Oracle result:", result);  // Log the entire result
+
+    if (!result.rows || result.rows.length === 0) {
+      return res.status(404).json({ message: "No users found." });
+    }
+
+    // Map the rows into a structured response
+    const users = result.rows.map(([ID, NAME, EMAIL, PASSWORD, TOKEN]) => ({
+      ID,
+      NAME,
+      EMAIL,
+      PASSWORD,
+      TOKEN
+    }));
+
+    res.json(users);
+  } catch (err) {
+    console.error('DB error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    if (conn) await conn.close();
+  }
+});
+
+
+// Initialize Oracle DB connection pool
+init();
+
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

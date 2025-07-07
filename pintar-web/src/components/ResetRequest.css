@@ -1,0 +1,100 @@
+.reset-request-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(75, 75, 75, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.reset-request-container {
+  background-color: #fff;
+  padding: 2.5rem 3rem;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+.reset-request-close-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  color: maroon;
+  transition: color 0.3s ease;
+}
+
+.reset-request-close-icon:hover {
+  color: #800000;
+}
+
+.reset-request-container h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0b477b;
+}
+
+.reset-request-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  color: #333;
+  min-width: 400px;
+}
+
+.reset-request-table thead {
+  background-color: #f3f4f6;
+}
+
+.reset-request-table th,
+.reset-request-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.reset-request-table tbody tr:hover {
+  background-color: #f0f9ff;
+}
+
+.reset-request-btn {
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  min-width: 70px;
+  text-align: center;
+}
+
+.reset-request-btn.reset {
+  background-color: #3b82f6; /* blue-500 */
+  color: white;
+}
+
+.reset-request-btn.reset:hover {
+  background-color: #2563eb; /* blue-600 */
+}
+
+.reset-request-btn.reject {
+  background-color: #ef4444; /* red-500 */
+  color: white;
+}
+
+.reset-request-btn.reject:hover {
+  background-color: #dc2626; /* red-600 */
+}
