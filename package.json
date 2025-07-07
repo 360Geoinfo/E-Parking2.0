@@ -1,5 +1,25 @@
 {
-  "dependencies": {
-    "react-router-dom": "^7.6.0"
-  }
+  "name": "e-parking2.0",
+  "version": "1.0.0",
+  "description": "**PINTAR** is a smart parking system available as a **web app**, **iOS**, and **Android** app. This project separates both app and web development for better maintainability and scalability.",
+  "main": "index.js",
+  "workspaces": [
+    "pintar-web",
+    "pintar-operator",
+    "pintar-app",
+    "pintar-backend"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/360Geoinfo/E-Parking2.0.git"
+  },
+  "author": "360geoinfo developers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/360Geoinfo/E-Parking2.0/issues"
+  },
+  "homepage": "https://github.com/360Geoinfo/E-Parking2.0#readme"
 }
